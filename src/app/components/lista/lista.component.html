@@ -2,17 +2,15 @@
   
   <!-- https://mdbootstrap.com/docs/standard/forms/input-fields/ -->
 
-    <div class="row pt-3">
-      <div class="col-6">
+    <div class="title pt-3">
         <h4>Lista de Clientes</h4>
-      </div>
-  
-      <div class="col-6 text-end">
+        @if (clientList.length === 0) {
+           <span>Clique em "Adicionar" (ao lado) para inserir um novo cliente na lista.</span>
+        }
         <button class="btn btn-success" (click)="openModel()"><i class="fa-solid fa-add" title="Adicionar"></i></button>
-      </div>
     </div>
   
-    @if (clientList.length !== 0) {
+   
     <div class="row">
       @for (item of clientList; track $index) {
       <div class="col-3 pt-2">
@@ -42,14 +40,6 @@
       </div>
       }
     </div>
-  
-    } @else { 
-      <div class="row">
-        <div class="col-12 p-4 text-center">
-          <p>Clique em "Adicionar" para inserir na lista um novo cliente.</p>
-        </div>
-      </div>
-    }
   </div>
 
 
@@ -60,9 +50,9 @@
       <div class="modal-content">
         <div class="modal-header">
           @if (clientObj.id ==0) {
-          <h4 class="modal-title">Adicionando um novo cliente</h4>
+          <h4 class="modal-title">Novo cliente</h4>
           } @else {
-          <h4 class="modal-title">Editando um cliente</h4>
+          <h4 class="modal-title">Edição de cliente</h4>
           }
           <button type="button" class="btn-close" (click)="closeModel()"></button>
         </div>
