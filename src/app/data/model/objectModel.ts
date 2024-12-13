@@ -25,9 +25,10 @@ export class Address {
     }
 }
 
-export interface IKeyValues {
+// usado por MemoryStore, para emular o comportamento do LocalStorage/SessionStorage
+export interface IKeyValue {
     key: string;
-    values: string;
+    value: string;
 }
 
 export interface IStore {

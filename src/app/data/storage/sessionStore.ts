@@ -5,10 +5,10 @@ import { IStore } from "../model/objectModel";
 @Injectable({providedIn: "root"})
 export class SessionStore extends LocalStore implements IStore {
 
-    isEmpty = () => sessionStorage.length === 0;
-    clear   = () => sessionStorage.clear();
+    override isEmpty = () => sessionStorage.length === 0;
+    override clear   = () => sessionStorage.clear();
     
-    get<T>(key: string) {
+    override get<T>(key: string) {
       const value = sessionStorage.getItem(key);
       if (value) {
         const data: T = JSON.parse(value);
@@ -16,7 +16,7 @@ export class SessionStore extends LocalStore implements IStore {
       }
       return null;
     }
-    set(key: string, data: any) {
+    override set(key: string, data: any) {
       const value = JSON.stringify(data);
       sessionStorage.setItem(key, value);
     }

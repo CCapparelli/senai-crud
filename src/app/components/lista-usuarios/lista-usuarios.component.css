@@ -1,0 +1,38 @@
+.fa-trash {
+    color: red;
+}
+.buttons {
+    display: flex;
+    justify-content: end;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.card-footer, .modal-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+}
+.fa-pen-to-square {
+    color:orange;
+}
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-control, .form-control:active {
+    border: 0;
+    box-shadow: none;
+}
+
+.no-border {
+    border: 0;
+    box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+}
+.title {
+    display: flex;
+    justify-content: space-between;
+}
