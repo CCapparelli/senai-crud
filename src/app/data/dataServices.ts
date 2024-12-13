@@ -2,34 +2,34 @@ import { Injectable, OnInit } from "@angular/core";
 import { LocalServices } from "./services/localServices";
 import { SessionServices } from "./services/sessionServices";
 import { MemoryServices } from "./services/memoryServices";
-import { IUserData } from "./model/objectModel";    
+import { Address, IUserData } from "./model/objectModel";    
 import { StateChangedEvent, StateChangedEventArgs } from "./model/events";
 
 class Users { 
     data : IUserData[]|null = [];
 
     constructor(private event : StateChangedEvent) {}
-
-    list = () => this.data;
+    
+    empty = {email: '', name: '', mobile: '', addressInfo: new Address('','','','')};
+    list  = () => this.data;
 
     saveOrUpdate(user: IUserData): void {
-        var x = this.data?.find((user) => user.email === user.email);
-        if (x) 
-            x = user;
+        if (!this.data) return;
+
+        var i = this.data.findIndex((x) => x.email === user.email);
+        if (i >= 0) 
+            this.data[i] = user;
         else 
-            this.data?.push(user);
+            this.data.push(user);
 
         this.event.raise.next(new StateChangedEventArgs('savedOrUpdated', user));
     }
 
-    remove(user: IUserData) {
-        var x = this.data?.find((user) => user.email === user.email);
-        if (x) {
-            const index = this.data?.indexOf(x);
-            this.data?.slice(index, 1);
-
-            this.event.raise.next(new StateChangedEventArgs('removed', user));
-        }
+    remove(data: IUserData) {
+        if (!this.data) return;
+        var i = this.data.findIndex((x) => x.email === data.email);
+        this.data.splice(i, 1);
+        this.event.raise.next(new StateChangedEventArgs('removed', data));
     }
 }
 
@@ -44,6 +44,7 @@ export class DataServices implements OnInit {
                 private sessionService : SessionServices,
                 private event : StateChangedEvent) {
         this.users = new Users(this.event);
+        this.seedUsers();
     }
     
     ngOnInit(): void {
@@ -52,5 +53,11 @@ export class DataServices implements OnInit {
             this.localService.set(this.usersKey, this.users.data);
             console.log(`Event: ${args.message} - User: ${JSON.stringify(args.data)}`);
         });
+    }
+
+    seedUsers() {
+        this.users.data?.push({email: 'user-1@acme.com', name: 'User One', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70 000 - 00')})
+        this.users.data?.push({email: 'user-2@acme.com', name: 'User Two', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70 000 - 00')})
+        this.users.data?.push({email: 'user-3@acme.com', name: 'User Three', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70 000 - 00')})
     }
 }

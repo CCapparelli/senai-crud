@@ -5,7 +5,7 @@ export interface IUser {
 export interface IUserData extends IUser {
     name: string;
     mobile: string|null;
-    address: Address|null;
+    addressInfo: Address;
 }
 
 export interface IUserAuth extends IUser {
@@ -13,15 +13,38 @@ export interface IUserAuth extends IUser {
     token:string;
 }
 
+export interface ITable<T> {
+    list : T[];
+    divTable:HTMLElement|null;
+
+    edit(item: T) : void;
+    remove(item: T) : void;
+}
+
+export interface IModal<T> {
+    current : T;
+    divModal:HTMLElement|null;
+
+    closeModal() : void;
+}
+
+
 export class Address {
     address: string;
     city: string;
     state: string;
+    postalCode:string;
 
-    constructor(address: string, city: string,  state: string) {
+    constructor(address: string, city: string,  state: string, postalCode: string) {
         this.address = address;
         this.city = city;
         this.state = state;
+        this.postalCode = postalCode;
+    }
+
+    toString() {
+        return `${this.address}
+        ${this.postalCode} - ${this.city} / ${this.state}`;
     }
 }
 

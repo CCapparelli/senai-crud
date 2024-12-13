@@ -1,120 +1,80 @@
 <div class="container">
-  
     <!-- https://mdbootstrap.com/docs/standard/forms/input-fields/ -->
-  
-      <div class="title pt-3">
-          <h4>Lista de Clientes</h4>
-          @if (clientList.length === 0) {
-             <span>Clique em "Adicionar" (ao lado) para inserir um novo cliente na lista.</span>
-          }
-          <button class="btn btn-success" (click)="openModel()"><i class="fa-solid fa-add" title="Adicionar"></i></button>
-      </div>
-    
-     
-      <div class="row">
-        @for (item of clientList; track $index) {
-        <div class="col-3 pt-2">
-          <div class="card">
-            <div class="card-header">
-              <div class="row">
-                <div class="col-6">
-                  {{item.name}}
-                </div>
-                <div class="col-6 text-end">
-                  {{item.mobileNo}}
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <p> {{item.address}}</p>
-              <p> {{item.city}} , {{item.state}} , {{item.pincode}}</p>
-            </div>
-            <div class="card-footer text-center">
-                <small>{{item.email}}</small> 
-                <div class="buttons">
-                  <button class="btn m-0 p-0" (click)="onEdit(item)"><i class="fa-solid fa-pen-to-square" title="Editar"></i></button>
-                  <button class="btn m-0 p-0" (click)="onDelete(item)"><i class="fa-solid fa-trash" title="Deletar"></i></button>
-                </div>
-            </div>
-          </div>
-        </div>
-        }
-      </div>
+    <h4>Lista de Clientes</h4>
+    <div id="divTable"></div>
+
+    <div class="title pt-3">
+      <span>{{ titleMessage() }}</span>
+      <button class="btn btn-success" (click)="add()"><i class="fa-solid fa-add" title="Adicionar"></i></button>
     </div>
   
-  
     <!-- https://getbootstrap.com/docs/5.0/forms/floating-labels/ -->
-    <div class="modal" id="myModal" #myModal>
-    
+    <div id="divModal" class="modal" #divModal>
+
       <div class="modal-dialog">
         <div class="modal-content">
+
           <div class="modal-header">
-            @if (clientObj.id ==0) {
+            @if (current.email === '') {
             <h4 class="modal-title">Novo cliente</h4>
             } @else {
             <h4 class="modal-title">Edição de cliente</h4>
             }
-            <button type="button" class="btn-close" (click)="closeModel()"></button>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
           </div>
     
           <div class="modal-body">
             <div class="row">
-  
             <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="txtNome" placeholder="Nome" [(ngModel)]="clientObj.name">
+              <input type="text" class="form-control" id="txtNome" placeholder="Nome" [(ngModel)]="current.name">
               <label for="txtNome">Nome</label>
             </div>
             
-  
-  
             <div class="row">
               <div class="col-6">
                 <label for="">WhatsApp</label>
-                <input type="text" [(ngModel)]="clientObj.mobileNo" class="form-control" placeholder="WhatsApp">
+                <input type="text" [(ngModel)]="current.mobile" class="form-control" placeholder="WhatsApp">
               </div>
     
               <div class="col-6">
                 <label for="">E-mail</label>
-                <input type="text" [(ngModel)]="clientObj.email" class="form-control" placeholder="Email">
+                <input type="text" [(ngModel)]="current.email" class="form-control" placeholder="Email">
               </div>
             </div>
     
             <div class="row">
               <div class="col-4">
                 <label for="">Cidade</label>
-                <input type="text" [(ngModel)]="clientObj.city" class="form-control" placeholder="Cidade">
+                <input type="text" [(ngModel)]="current.addressInfo.city" class="form-control" placeholder="Cidade">
               </div>
     
               <div class="col-4">
                 <label for="">Estado</label>
-                <input type="text" [(ngModel)]="clientObj.state" class="form-control" placeholder="Estado">
+                <input type="text" [(ngModel)]="current.addressInfo.state" class="form-control" placeholder="Estado">
               </div>
     
               <div class="col-4">
                 <label for="">CEP</label>
-                <input type="text" [(ngModel)]="clientObj.pincode" class="form-control" placeholder="Código Postal">
+                <input type="text" [(ngModel)]="current.addressInfo.postalCode" class="form-control" placeholder="Código Postal">
               </div>
             </div>
     
             <div class="row">
               <div class="col-12">
                 <label for="">Endereço</label>
-                <textarea rows="3" [(ngModel)]="clientObj.address" class="form-control"></textarea>
+                <textarea rows="3" [(ngModel)]="current.addressInfo.address" class="form-control"></textarea>
               </div>
             </div>
           </div>
     
           <div class="modal-footer">
-    
-            <button type="button" class="btn btn-danger" (click)="closeModel()">Cancelar</button>
-            @if (clientObj.id ==0) {
-              <button type="button" class="btn btn-primary" (click)="save()">Salvar</button>
-            } @else {
-              <button type="button" class="btn btn-success" (click)="update()">Atualizar</button>
-            }
-           
+            <button type="button" class="btn btn-danger" (click)="closeModal()">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="saveOrUpdate()">Salvar</button>
           </div>
         </div>
+
       </div>
+    
+    
+    
     </div>
-  
