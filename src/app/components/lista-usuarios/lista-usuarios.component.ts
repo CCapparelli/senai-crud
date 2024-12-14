@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataServices } from '../../data/dataServices';
 import { IModal, ITable, IUserData } from '../../data/model/objectModel';
@@ -14,40 +14,51 @@ import { ModalBuilder } from '../../dom/modal.builder';
   templateUrl: './lista-usuarios.component.html',
   styleUrl: './lista-usuarios.component.css'
 })
-export class ListaUsuariosComponent implements OnInit, ITable<IUserData> { //, IModal<IUserData> {
+export class ListaUsuariosComponent implements OnInit, AfterViewInit, ITable<IUserData>, IModal<IUserData> {
   list: IUserData[] = [];
   divTable: HTMLElement|null;
-  // divModal: HTMLElement|null;
+  divModal: HTMLElement|null;
+  modalBuilder : ModalBuilder<IUserData>;
 
   current: IUserData;
-  @ViewChild('divModal') modal: ElementRef | undefined;
+  @ViewChild('myModal') modal: ElementRef | undefined;
 
   constructor(private dataServices: DataServices,
-              private tableBuilder: TableBuilder,
-              // private modalBuilder: ModalBuilder
+              private tableBuilder: TableBuilder
   ) {
     this.current = this.dataServices.users.empty;
     this.list = this.loadUsers();
     this.divTable = document.getElementById('divTable');
-    // this.divModal = document.getElementById('divModal');
+    this.divModal = document.getElementById('divModal');
 
-    // this.modalBuilder.build<IUserData>(this);
+    this.modalBuilder = new ModalBuilder<IUserData>(this);
+  }
+  ngAfterViewInit(): void {
+    this.divModal = document.getElementById('divModal');
+    if (this.divModal) {
+      this.modalBuilder.build(this.divModal);
+    }
   }
   
   ngOnInit(): void {
     this.loadData();
-    // this.modalBuilder.build<IUserData>(this);
   }
 
   loadData() {
-    this.current  = this.dataServices.users.empty;
     this.list     = this.loadUsers();
     this.divTable = document.getElementById('divTable');
-
     if (this.divTable && this.list) {
       this.tableBuilder.build<IUserData>(this, ['Email','Nome','WhatsApp','Endereço']);
     }
   }
+
+  // loadModal() {
+  //   this.current  = this.dataServices.users.empty;
+  //   this.divModal = document.getElementById('divModal');
+  //   if (this.divModal) { // && this.list) {
+  //     this.modalBuilder.build<IUserData>(this);
+  //   }
+  // }
 
   loadUsers(): IUserData[] {
     const x = this.dataServices.users?.data;
@@ -61,9 +72,11 @@ export class ListaUsuariosComponent implements OnInit, ITable<IUserData> { //, I
   }
 
   openModal() {
-    const modal = document.getElementById("divModal");
-    if (modal != null) 
-      modal.style.display = 'block';
+    // const modal = document.getElementById("myModal");
+    // if (modal != null) 
+    //   modal.style.display = 'block';
+
+    this.modalBuilder.open(this.current);
   }
   closeModal() {
     this.current = this.dataServices.users.empty
@@ -79,6 +92,7 @@ export class ListaUsuariosComponent implements OnInit, ITable<IUserData> { //, I
   edit(user: IUserData) {
     this.current = user;
     this.openModal();
+    this.modalBuilder.open(this.current);
   } 
   remove(user: IUserData) {
     const goOn = confirm(`Você tem certeza que quer deletar ${user.name}?`);

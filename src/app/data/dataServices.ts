@@ -56,8 +56,8 @@ export class DataServices implements OnInit {
     }
 
     seedUsers() {
-        this.users.data?.push({email: 'user-1@acme.com', name: 'User One', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70 000 - 00')})
-        this.users.data?.push({email: 'user-2@acme.com', name: 'User Two', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70 000 - 00')})
-        this.users.data?.push({email: 'user-3@acme.com', name: 'User Three', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70 000 - 00')})
+        this.users.data?.push({email: 'user-1@acme.com', name: 'User One', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70000-000')})
+        this.users.data?.push({email: 'user-2@acme.com', name: 'User Two', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70000-000')})
+        this.users.data?.push({email: 'user-3@acme.com', name: 'User Three', mobile: '61 99999 9999', addressInfo: new Address('Rua Direita, 1','São Paulo','SP','70000-000')})
     }
 }

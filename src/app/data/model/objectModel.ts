@@ -24,8 +24,6 @@ export interface ITable<T> {
 export interface IModal<T> {
     current : T;
     divModal:HTMLElement|null;
-
-    closeModal() : void;
 }
 
 

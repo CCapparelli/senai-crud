@@ -7,18 +7,21 @@
       <span>{{ titleMessage() }}</span>
       <button class="btn btn-success" (click)="add()"><i class="fa-solid fa-add" title="Adicionar"></i></button>
     </div>
+
+
+    <div id="divModal" class="modal"></div>
   
     <!-- https://getbootstrap.com/docs/5.0/forms/floating-labels/ -->
-    <div id="divModal" class="modal" #divModal>
+    <div id="myModal" class="modal" #myModal>
 
       <div class="modal-dialog">
         <div class="modal-content">
 
           <div class="modal-header">
             @if (current.email === '') {
-            <h4 class="modal-title">Novo cliente</h4>
+              <h4 class="modal-title">Novo cliente</h4>
             } @else {
-            <h4 class="modal-title">Edição de cliente</h4>
+              <h4 class="modal-title">Edição de cliente</h4>
             }
             <button type="button" class="btn-close" (click)="closeModal()"></button>
           </div>
