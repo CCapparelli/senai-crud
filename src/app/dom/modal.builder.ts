@@ -1,71 +1,59 @@
-import { Injectable } from "@angular/core";
 import { IModal } from "../data/model/objectModel";
+import { DOM } from './utils.dom';
+import { FloatingForm } from './utils.form';
 
-export class ModalBuilder<T> {
-    private component: IModal<T>;
+export class ModalBuilder<IUserData> {
+    private component: IModal<IUserData>;
+    current: IUserData;
+    modalContainer: HTMLElement;
 
-    constructor(component : IModal<T>) {
+    constructor(component : IModal<IUserData>) {
         this.component = component;
+        this.current   = this.component.current;
+        this.modalContainer  = this.component.modalContainer;
+        this.init();
     }
 
-    open(item: T): void {
-        const modal = document.getElementById("divModal");
-        if (modal != null) 
-          modal.style.display = 'block';
-    }
+    init() {
+        this.modalContainer.innerHTML = '';
 
-    build(divModal:HTMLElement) {
-        if (!divModal) return;
-        divModal.innerHTML = '';
+        let dialog  = DOM.append(this.modalContainer, 'div', ['modal-dialog']);
+        let content = DOM.append(dialog, 'div', ['modal-content']);
 
-        let dialog  = this.append(divModal, 'div', ['modal-dialog']);
-        let content = this.append(dialog, 'div', ['modal-content']);
-
-        let header = this.append(content, 'div', ['modal-header']);
-        let body   = this.append(content, 'div', ['modal-body']);
-        let footer = this.append(content, 'div', ['modal-footer']);
+        let header = DOM.append(content, 'div', ['modal-header']);
+        let body   = DOM.append(content, 'div', ['modal-body']);
+        let footer = DOM.append(content, 'div', ['modal-footer']);
+        let spaced = DOM.append(footer, 'div', ['f-sp-b']);
 
         // const title = (parent.current[0] === '') ? 'Novo' : 'Edição';
         const title = 'Modal';
-        this.appendText(header, 'h4', ['modal-title'], title);
+        DOM.appendText(header, 'h4', ['modal-title'], title);
        
-        const btn1 = this.appendType(header, 'button', 'button', ['btn-close'], null);
-        btn1.addEventListener('click', () => this.close());
+        const btnX = DOM.appendType(header, 'button', 'button', ['btn-close'], null);
+        btnX.addEventListener('click', () => this.close());
 
-        const btn2 = this.appendType(footer, 'button', 'button', ['btn-primary'], 'Salvar');
-        btn2.addEventListener('click', () => this.close());
+        // body 
+        const vName = FloatingForm.Input('txtName', 'text', 'Nome', body);
+        vName.setAttribute('value', this.current.name);
 
-    }
-    
-    close() {
-        const modal = document.getElementById("divModal");
-        if (modal!= null) 
-          modal.style.display = 'none';
+        FloatingForm.Input('txtMobile', 'text', 'WhatsApp', body);
+        FloatingForm.Input('txtEmail', 'email', 'Email', body);
+        FloatingForm.Input('txtAddress', 'textArea', 'Endereço', body);
+        FloatingForm.Input('txtCity', 'text', 'Cidade', body);
+        FloatingForm.Input('txtState', 'text', 'Estado', body);
+        FloatingForm.Input('txtPostalCode', 'text', 'CEP', body);
+
+        // footer
+        const btnCancel = DOM.appendType(spaced, 'button', 'button', ['btn', 'btn-danger'], 'Cancelar');
+        btnCancel.addEventListener('click', () => this.close());
+
+        const btnSave = DOM.appendType(spaced, 'button', 'button', ['btn', 'btn-primary'], 'Salvar');
+        btnSave.addEventListener('click', () => this.component.saveOrUptade(this.current));
     }
 
-    append(parent: HTMLElement, tag:string, classes: string[]) : HTMLElement {
-        const result = document.createElement(tag);
-        for (let i = 0; i < classes.length; i++) {
-            result.classList.add(classes[i]);
-        }
-        parent.appendChild(result);
-        return result;
+    show(item : IUserData): void {
+        this.modalContainer.style.display = 'block';
     }
 
-    appendText(parent:HTMLElement, tag:string, classes: string[], content:string) {
-        const result = this.append(parent, tag, classes);
-        const text  = document.createTextNode(content);
-        result.appendChild(text);
-        return result;
-    }
-    
-    appendType(parent:HTMLElement, tag:string, type:string, classes: string[], content:string|null) {
-        const result = this.append(parent, tag, classes);
-        result.setAttribute('type', type);
-        if (content) {
-            const text  = document.createTextNode(content);
-            result.appendChild(text);
-        }
-        return result;
-    }
+    close = () => this.modalContainer.style.display = 'none';
 }

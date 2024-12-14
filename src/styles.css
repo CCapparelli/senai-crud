@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+.f-sp-b {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.form-control {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+.form-control:focus {
+    box-shadow: none;
+    border-bottom: 1px solid black;
+}

@@ -13,17 +13,27 @@ export interface IUserAuth extends IUser {
     token:string;
 }
 
-export interface ITable<T> {
-    list : T[];
-    divTable:HTMLElement|null;
+export interface IContext<T> {
+    list: T[];
+    emptyItem: T;
 
-    edit(item: T) : void;
-    remove(item: T) : void;
+    saveOrUptade(item : T) : void;
+    remove(item : T) : void;
+    wipe() : void;
+}
+
+export interface ITable<T> {
+    list: T[];
+    tableContainer:HTMLElement;
+    
+    edit(item : T) : void;
+    remove(item : T) : void;
 }
 
 export interface IModal<T> {
     current : T;
-    divModal:HTMLElement|null;
+    modalContainer:HTMLElement;
+    saveOrUptade(item : T) : void;
 }
 
 
@@ -42,7 +52,7 @@ export class Address {
 
     toString() {
         return `${this.address}
-        ${this.postalCode} - ${this.city} / ${this.state}`;
+        ${this.postalCode} - ${this.city}/${this.state}`;
     }
 }
 
