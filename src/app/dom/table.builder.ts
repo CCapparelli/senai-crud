@@ -31,11 +31,12 @@ export class TableBuilder<IUserData> {
           let body = DOM.append(table, 'tbody', []);
           for (let i = 0; i < this.context.list.length; i++) {
             let tr = DOM.append(body, 'tr', []);
-            const user = this.context.list[i];
-            for (const key in user) {
-              DOM.appendBodyCell(tr, user[key] as string);
-            }
-   
+            const user = this.context.list[i] as IUserData;
+            DOM.appendBodyCell(tr, Object(user)['email']);
+            DOM.appendBodyCell(tr, Object(user)['name']);
+            DOM.appendBodyCell(tr, Object(user)['mobile']);
+            DOM.appendBodyCell(tr, Object(user)['addressInfo']);
+
             let td = DOM.append(tr, 'td', []);
             let div = DOM.append(td, 'div', ['buttons'])
     

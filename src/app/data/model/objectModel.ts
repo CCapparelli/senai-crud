@@ -4,7 +4,7 @@ export interface IUser {
 
 export interface IUserData extends IUser {
     name: string;
-    mobile: string|null;
+    mobile: string;
     addressInfo: Address;
 }
 
@@ -36,12 +36,11 @@ export interface IModal<T> {
     saveOrUptade(item : T) : void;
 }
 
-
 export class Address {
-    address: string;
-    city: string;
-    state: string;
-    postalCode:string;
+    address: string = '';
+    city: string = '';
+    state: string = '';
+    postalCode:string = '';
 
     constructor(address: string, city: string,  state: string, postalCode: string) {
         this.address = address;
@@ -54,6 +53,13 @@ export class Address {
         return `${this.address}
         ${this.postalCode} - ${this.city}/${this.state}`;
     }
+}
+
+export class UserData implements IUserData {
+    name: string = '';
+    mobile: string = '';
+    addressInfo: Address = new Address('','','','');
+    email: string = '';
 }
 
 // usado por MemoryStore, para emular o comportamento do LocalStorage/SessionStorage

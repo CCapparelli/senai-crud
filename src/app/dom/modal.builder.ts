@@ -1,23 +1,20 @@
-import { IModal } from "../data/model/objectModel";
+import { Component } from "@angular/core";
+import { Address, IModal, IUserData } from "../data/model/objectModel";
 import { DOM } from './utils.dom';
-import { FloatingForm } from './utils.form';
+import { FloatingForm } from './utils.forms';
 
-export class ModalBuilder<IUserData> {
-    private component: IModal<IUserData>;
-    current: IUserData;
-    modalContainer: HTMLElement;
-
-    constructor(component : IModal<IUserData>) {
-        this.component = component;
-        this.current   = this.component.current;
-        this.modalContainer  = this.component.modalContainer;
+export class ModalBuilder {
+    private parent: IModal<IUserData>;
+    
+    constructor(parent : IModal<IUserData>) {
+        this.parent = parent;
         this.init();
     }
 
     init() {
-        this.modalContainer.innerHTML = '';
+        this.parent.modalContainer.innerHTML = '';
 
-        let dialog  = DOM.append(this.modalContainer, 'div', ['modal-dialog']);
+        let dialog  = DOM.append(this.parent.modalContainer, 'div', ['modal-dialog']);
         let content = DOM.append(dialog, 'div', ['modal-content']);
 
         let header = DOM.append(content, 'div', ['modal-header']);
@@ -30,30 +27,53 @@ export class ModalBuilder<IUserData> {
         DOM.appendText(header, 'h4', ['modal-title'], title);
        
         const btnX = DOM.appendType(header, 'button', 'button', ['btn-close'], null);
-        btnX.addEventListener('click', () => this.close());
+        btnX.addEventListener('click', () => this.hide());
 
         // body 
-        const vName = FloatingForm.Input('txtName', 'text', 'Nome', body);
-        vName.setAttribute('value', this.current.name);
+        //  https://getbootstrap.com/docs/5.0/forms/floating-labels/ 
+        FloatingForm.Input('txtName', 'text', 'Nome', this.parent.current.name, body);
+        
+        const inline = DOM.append(body, 'div', ['f-sp-b']);
+        FloatingForm.Input('txtEmail', 'email', 'Email', this.parent.current.email, inline);
+        FloatingForm.Input('txtMobile', 'text', 'WhatsApp', this.parent.current.mobile, inline);
+        
+        FloatingForm.Input('txtAddress', 'textArea', 'Endereço', this.parent.current.addressInfo.address, body);
 
-        FloatingForm.Input('txtMobile', 'text', 'WhatsApp', body);
-        FloatingForm.Input('txtEmail', 'email', 'Email', body);
-        FloatingForm.Input('txtAddress', 'textArea', 'Endereço', body);
-        FloatingForm.Input('txtCity', 'text', 'Cidade', body);
-        FloatingForm.Input('txtState', 'text', 'Estado', body);
-        FloatingForm.Input('txtPostalCode', 'text', 'CEP', body);
+        const inline2 = DOM.append(body, 'div', ['f-sp-b']);
+        FloatingForm.Input('txtPostalCode', 'text', 'CEP', this.parent.current.addressInfo.postalCode, inline2);
+        FloatingForm.Input('txtCity', 'text', 'Cidade', this.parent.current.addressInfo.city, inline2);
+        FloatingForm.Input('txtState', 'text', 'Estado', this.parent.current.addressInfo.state, inline2);
 
         // footer
         const btnCancel = DOM.appendType(spaced, 'button', 'button', ['btn', 'btn-danger'], 'Cancelar');
-        btnCancel.addEventListener('click', () => this.close());
+        btnCancel.addEventListener('click', () => this.hide());
 
         const btnSave = DOM.appendType(spaced, 'button', 'button', ['btn', 'btn-primary'], 'Salvar');
-        btnSave.addEventListener('click', () => this.component.saveOrUptade(this.current));
+        btnSave.addEventListener('click', () => this.saveOrUpdate());
     }
 
+    saveOrUpdate() {
+        const name   = (document.getElementById('txtName') as HTMLInputElement)?.value;
+        const mobile = (document.getElementById('txtMobile') as HTMLInputElement)?.value;
+        const email  = (document.getElementById('txtEmail') as HTMLInputElement)?.value;
+        const street = (document.getElementById('txtAddress') as HTMLInputElement)?.value;
+        const city   = (document.getElementById('txtCity') as HTMLInputElement)?.value;
+        const state  = (document.getElementById('txtState') as HTMLInputElement)?.value;
+        const code   = (document.getElementById('txtPostalCode') as HTMLInputElement)?.value;
+
+        const item = { name: name, mobile: mobile, email: email, addressInfo: new Address(street, city, state, code)};
+        this.parent.saveOrUptade(item);
+    }
     show(item : IUserData): void {
-        this.modalContainer.style.display = 'block';
+        (document.getElementById('txtName') as HTMLInputElement).value = item.name;
+        (document.getElementById('txtMobile') as HTMLInputElement).value = item.mobile;
+        (document.getElementById('txtEmail') as HTMLInputElement).value = item.email;
+        (document.getElementById('txtAddress') as HTMLInputElement).value = item.addressInfo.address;
+        (document.getElementById('txtCity') as HTMLInputElement).value = item.addressInfo.city;
+        (document.getElementById('txtState') as HTMLInputElement).value = item.addressInfo.state;
+        (document.getElementById('txtPostalCode') as HTMLInputElement).value = item.addressInfo.postalCode;
+        this.parent.modalContainer.style.display = 'block';
     }
 
-    close = () => this.modalContainer.style.display = 'none';
+    hide = () => this.parent.modalContainer.style.display = 'none';
 }

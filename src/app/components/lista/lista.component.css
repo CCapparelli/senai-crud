@@ -1,12 +1,4 @@
-.fa-trash {
-    color: red;
-}
-.buttons {
-    display: flex;
-    justify-content: end;
-    gap: 5px;
-    cursor: pointer;
-}
+
 
 .card-footer, .modal-footer {
     width: 100%;

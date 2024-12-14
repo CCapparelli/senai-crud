@@ -15,14 +15,12 @@ import { ModalBuilder } from '../../dom/modal.builder';
   styleUrl: './lista-usuarios.component.css'
 })
 export class ListaUsuariosComponent implements ITable<IUserData>, IModal<IUserData> {
-  list: IUserData[] = [];
-  current: IUserData;
-  tableContainer: HTMLElement;
-  modalContainer: HTMLElement;
-  modalBuilder : ModalBuilder<IUserData>;
-  tableBuilder: TableBuilder<IUserData>;
-  
-  // @ViewChild('myModal') modal: ElementRef | undefined;
+  public list: IUserData[] = [];
+  public current: IUserData;
+  public tableContainer: HTMLElement;
+  public modalContainer: HTMLElement;
+  public modalBuilder : ModalBuilder;
+  public tableBuilder: TableBuilder<IUserData>;
 
   constructor(private usersContext: UserLocalContext) {
     this.tableContainer = this.getTableContainer();
@@ -32,7 +30,7 @@ export class ListaUsuariosComponent implements ITable<IUserData>, IModal<IUserDa
     this.current        = this.usersContext.emptyItem;
     
     this.tableBuilder   = new TableBuilder(this, this.usersContext);
-    this.modalBuilder   = new ModalBuilder<IUserData>(this);
+    this.modalBuilder   = new ModalBuilder(this);
   }
 
   getTableContainer() {
@@ -58,27 +56,27 @@ export class ListaUsuariosComponent implements ITable<IUserData>, IModal<IUserDa
   }
 
   add() {
-    this.current = this.usersContext.users.empty;
+    this.current = this.usersContext.emptyItem;
     this.modalBuilder.show(this.current);
   }
 
   // ITable
   edit(user: IUserData) {
     this.current = user;
-    this.modalBuilder.show(this.current);
+    this.modalBuilder.show(user);
   } 
-  remove(user: IUserData) {
-    const goOn = confirm(`Você tem certeza que quer deletar ${user.name}?`);
+  remove(item: IUserData) {
+    const goOn = confirm(`Você tem certeza que quer deletar ${item.name}?`);
     if(goOn) {
-      this.usersContext.remove(user);
+      this.usersContext.remove(item);
       this.tableBuilder.load();
     }
   }
 
   // IModal
   saveOrUptade(item: IUserData): void {
-    this.usersContext.saveOrUptade(this.current);
-    this.modalBuilder.close();
+    this.usersContext.saveOrUptade(item);
     this.tableBuilder.load();
+    this.modalBuilder.hide();
   }
 }

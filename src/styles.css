@@ -4,6 +4,7 @@
     display: flex;
     justify-content: space-between;
 }
+
 .form-control {
     border: none;
     box-shadow: none;
@@ -12,4 +13,17 @@
 .form-control:focus {
     box-shadow: none;
     border-bottom: 1px solid black;
+}
+
+.fa-pen-to-square {
+    color: orange;
+}
+.fa-trash {
+    color: red;
+}
+.buttons {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    cursor: pointer;
 }
